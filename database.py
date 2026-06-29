@@ -49,3 +49,16 @@ def add_repo(user_id: int, url: str, owner: str, repo: str, sha: str):
 def get_user_repos(user_id: int) -> list:
     with get_db() as conn:
         return conn.execute("SELECT * FROM repos WHERE user_id = ? ORDER BY id DESC", (user_id,)).fetchall()
+
+def get_all_repos_for_polling() -> list:
+    with get_db() as conn:
+        return conn.execute("SELECT user_id, github_url, owner, repo, last_sha FROM repos").fetchall()
+
+def update_repo_sha(github_url: str, new_sha: str):
+    with get_db() as conn:
+        conn.execute("UPDATE repos SET last_sha = ? WHERE github_url = ?", (new_sha, github_url))
+
+def remove_repo(user_id: int, repo_id: int):
+    """Removes a repository for the user."""
+    with get_db() as conn:
+        conn.execute("DELETE FROM repos WHERE id = ? AND user_id = ?", (repo_id, user_id))
