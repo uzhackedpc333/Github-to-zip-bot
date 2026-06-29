@@ -151,7 +151,7 @@ def main():
     app.add_handler(CallbackQueryHandler(remove_repo_callback, pattern="^remove_"))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_repo))
 
-    app.job_queue.run_repeating(poll_repo_updates, interval=600, first=10)
+    app.job_queue.run_repeating(poll_repo_updates, interval=120, first=10)
 
     print("✨ Bot is running with auto-update and management...")
     app.run_polling()
